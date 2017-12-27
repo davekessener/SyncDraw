@@ -24,6 +24,16 @@ public class CanvasRenderer
 		mGC.setFill(Color.WHITE);
 	}
 	
+	public Vec2 toRelative(Vec2 v)
+	{
+		return new Vec2(v.X / mWidth.getValue().doubleValue(), v.Y / mHeight.getValue().doubleValue());
+	}
+	
+	public Vec2 toAbsolute(Vec2 v)
+	{
+		return new Vec2(v.X * mWidth.getValue().doubleValue(), v.Y * mHeight.getValue().doubleValue());
+	}
+	
 	public void clear()
 	{
 		mGC.fillRect(0, 0, mWidth.getValue().doubleValue(), mHeight.getValue().doubleValue());

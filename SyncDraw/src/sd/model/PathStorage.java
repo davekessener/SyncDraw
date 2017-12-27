@@ -27,11 +27,11 @@ public class PathStorage implements Client
 		{
 			Event.Pressed p = (Event.Pressed) e;
 			
-			onPressed(Utils.Int2Color(p.color), p.stroke, p.v);
+			onPressed(Utils.Int2Color(p.color), p.stroke, mRender.toAbsolute(p.v));
 		}
 		else if(e instanceof Event.Dragged)
 		{
-			onDragged(((Event.Dragged) e).v);
+			onDragged(mRender.toAbsolute(((Event.Dragged) e).v));
 		}
 		else if(e instanceof Event.Released)
 		{
@@ -40,6 +40,10 @@ public class PathStorage implements Client
 		else if(e instanceof Event.Undo)
 		{
 			undo();
+		}
+		else if(e instanceof Event.Clear)
+		{
+			clear();
 		}
 	}
 	
@@ -79,5 +83,11 @@ public class PathStorage implements Client
 			
 			redraw();
 		}
+	}
+	
+	public void clear()
+	{
+		mPaths.clear();
+		redraw();
 	}
 }

@@ -23,6 +23,7 @@ public class SyncDrawApp
 	private final PathBuilder mBuilder;
 	private final PathStorage mPaths;
 	private final RelayManager mRelay;
+	private final CanvasRenderer mRenderer;
 	private final ConnectionManager mNetwork;
 	private Color mColor;
 	private double mStroke;
@@ -44,13 +45,14 @@ public class SyncDrawApp
 		mRelay = new RelayManager();
 		mNetwork = new ConnectionManager();
 		mBuilder = new PathBuilder(mColor, mStroke);
-		mPaths = new PathStorage(new CanvasRenderer(mCanvas), mBuilder);
+		mRenderer = new CanvasRenderer(mCanvas);
+		mPaths = new PathStorage(mRenderer, mBuilder);
 		mUI = new AppUI(primary, mCanvas);
 		
 		mRelay.register(mPaths);
 
-		mCanvas.setOnMousePressed(e -> mRelay.relay(new Event.Pressed(getColor(), getStroke(), new Vec2(e.getX(), e.getY()))));
-		mCanvas.setOnMouseDragged(e -> mRelay.relay(new Event.Dragged(new Vec2(e.getX(), e.getY()))));
+		mCanvas.setOnMousePressed(e -> mRelay.relay(new Event.Pressed(getColor(), getStroke(), mRenderer.toRelative(new Vec2(e.getX(), e.getY())))));
+		mCanvas.setOnMouseDragged(e -> mRelay.relay(new Event.Dragged(mRenderer.toRelative(new Vec2(e.getX(), e.getY())))));
 		mCanvas.setOnMouseReleased(e -> mRelay.relay(new Event.Released()));
 		
 		registerControls();
@@ -82,7 +84,7 @@ public class SyncDrawApp
 			if(!mErasing)
 			{
 				mBuilder.colorProperty().setValue(Utils.Invert(mColor));
-				mBuilder.strokeProperty().setValue(2 * mStroke);
+				mBuilder.strokeProperty().setValue(3 * mStroke);
 			}
 			else
 			{
@@ -99,6 +101,10 @@ public class SyncDrawApp
 		
 		mUI.registerControl("connect", () -> {
 			new ConnectDialog(url -> mNetwork.connect(url));
+		});
+		
+		mUI.registerControl("clear", () -> {
+			mRelay.relay(new Event.Clear());
 		});
 	}
 }

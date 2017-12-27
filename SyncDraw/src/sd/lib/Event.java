@@ -72,5 +72,16 @@ public abstract class Event implements Serializable
 		}
 	}
 	
+	public static class Clear extends Event
+	{
+		private static final long serialVersionUID = -5346407384503713066L;
+
+		@Override
+		public String toString()
+		{
+			return "[CLEAR]";
+		}
+	}
+	
 	private Event() { }
 }

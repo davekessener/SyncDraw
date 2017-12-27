@@ -46,6 +46,8 @@ public class AppUI implements UI
 		hbox.getChildren().add(status);
 		mStatus.addListener((ob, o, n) -> status.setText(mStatus.getValue()));
 		
+		mControlPane.setSpacing(15D);
+		
 		mRoot.setRight(mControlPane);
 		mRoot.setBottom(hbox);
 		mRoot.setCenter(sp);
